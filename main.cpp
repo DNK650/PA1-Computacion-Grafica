@@ -1,6 +1,53 @@
 #include <GL/freeglut.h>
 #include <cmath>
+#include <cstdlib>
 
+float autoX = 0.0f;
+float autoAngulo = 0.0f;
+float autoEscala = 1.0f;
+
+void teclado(unsigned char tecla, int x, int y)
+{
+    switch (tecla)
+    {
+        case 'd':
+        case 'D':
+            autoX += 0.3f;
+            break;
+
+        case 'a':
+        case 'A':
+            autoX -= 0.3f;
+            break;
+
+        case 'q':
+        case 'Q':
+            autoAngulo += 5.0f;
+            break;
+
+        case 'e':
+        case 'E':
+            autoAngulo -= 5.0f;
+            break;
+
+        case '+':
+            autoEscala += 0.1f;
+            break;
+
+        case '-':
+            autoEscala -= 0.1f;
+
+            if (autoEscala < 0.2f)
+                autoEscala = 0.2f;
+
+            break;
+
+        case 27:
+            exit(0);
+    }
+
+    glutPostRedisplay();
+}
 void dibujarRectangulo(
         float x1, float y1,
         float x2, float y2,
@@ -161,6 +208,31 @@ void dibujarSol()
 // AUTOMÓVIL
 void dibujarAuto()
 {
+    glPushMatrix();
+
+    // 1. Mover el auto horizontalmente
+    glTranslatef(autoX, 0.0f, 0.0f);
+
+    // 2. Llevar el centro aproximado del auto al origen
+    glTranslatef(0.0f, -5.6f, 0.0f);
+
+    // 3. Rotar el auto sobre su propio centro
+    glRotatef(
+        autoAngulo,
+        0.0f,
+        0.0f,
+        1.0f
+    );
+    // Escala
+    glScalef(
+        autoEscala,
+        autoEscala,
+        1.0f
+    );
+    // 4. Regresar el auto a su posición original
+    glTranslatef(0.0f, 5.6f, 0.0f);
+
+
     // Carrocería
     dibujarRectangulo(
         -1.7f, -6.3f,
@@ -170,9 +242,7 @@ void dibujarAuto()
 
     // Parte superior
     glColor3f(0.8f, 0.1f, 0.1f);
-
     glBegin(GL_POLYGON);
-
     glVertex2f(-1.0f, -5.3f);
     glVertex2f(-0.5f, -4.7f);
     glVertex2f( 0.8f, -4.7f);
@@ -195,8 +265,9 @@ void dibujarAuto()
          0.4f,
          0.05f, 0.05f, 0.05f
     );
-}
 
+    glPopMatrix();
+}
 // ESCENA COMPLETA
 
 void dibujarEscena()
@@ -276,7 +347,7 @@ int main(int argc, char** argv)
     glutDisplayFunc(
         dibujarEscena
     );
-
+    glutKeyboardFunc(teclado);
     glutMainLoop();
 
     return 0;
