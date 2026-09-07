@@ -1,6 +1,46 @@
-#include <iostream>
+#include <GL/freeglut.h>
 
-int main() {
-    std::cout << "PA1 Computacion Grafica funcionando" << std::endl;
+void dibujar() {
+
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glBegin(GL_TRIANGLES);
+
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex2f(-0.5f, -0.5f);
+
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex2f(0.5f, -0.5f);
+
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex2f(0.0f, 0.5f);
+
+    glEnd();
+
+    glFlush();
+}
+
+int main(int argc, char** argv) {
+
+    glutInit(&argc, argv);
+
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+
+    glutInitWindowSize(800, 600);
+    glutInitWindowPosition(100, 100);
+
+    glutCreateWindow("PA1 - Computacion Grafica");
+
+    glClearColor(
+        0.1f,
+        0.1f,
+        0.1f,
+        1.0f
+    );
+
+    glutDisplayFunc(dibujar);
+
+    glutMainLoop();
+
     return 0;
 }
